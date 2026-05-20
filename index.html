@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>NEEDLY – Micro-solutions</title>
+
+<!-- Favicon (logo onglet navigateur) -->
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+
+<style>
+strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+strong::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("logo.png") no-repeat center;
+  background-size: contain;
+  display: inline-block;
+}
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* iOS ONLY */
+@supports (-webkit-touch-callout: none) {
+  body {
+    overscroll-behavior: none;
+  }
+}
+
+body { font-family:'Inter',Arial,sans-serif; background:linear-gradient(135deg,#0f0c29,#302b63,#24243e); color:#fff; }
+a { text-decoration:none; color:inherit; cursor:pointer; }
+header { padding:25px 40px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); }
+.logo { font-size:26px; font-weight:800; color:#00ffd5; }
+nav a { margin-left:30px; font-weight:500; opacity:0.85; }
+nav a:hover { opacity:1; }
+
+/* Hero / Marketplace */
+.hero { padding:100px 60px; max-width:900px; }
+.hero h1{ font-size:56px; font-weight:900; line-height:1.1; } 
+.hero span{ color:#00ffd5; }
+.hero p{ margin-top:25px; font-size:20px; opacity:0.85; }
+.cta{ margin-top:40px; }
+.cta button{
+  padding:16px 28px;
+  font-size:16px;
+  font-weight:700;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.2s;
+  border:none;
+}
+
+/* bouton principal */
+.cta .primary{
+  background:#00ffd5;
+  color:#000;
+}
+
+/* bouton secondaire */
+.cta .secondary{
+  background:transparent;
+  color:#00ffd5;
+  border:1px solid #00ffd5;
+}
+
+/* hover */
+.cta .primary:hover,
+.cta .secondary:hover{
+  opacity:0.8;
+}
+
+.section{ padding:80px 60px; }
+.section h2{ font-size:38px; margin-bottom:30px; }
+.marketplace{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:25px; }
+.card{
+  background: rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:25px;
+  transition:0.3s;
+  cursor:pointer;
+  margin-bottom:25px;
+}
+.card:hover{ transform:translateY(-6px); background:rgba(255,255,255,0.1); }
+.card h3{ margin-bottom:10px; color:#00ffd5; }
+.badge{ display:inline-block; padding:6px 12px; background:rgba(0,255,213,0.15); border-radius:8px; font-size:12px; margin-bottom:15px; }
+.price{ font-size:22px; font-weight:800; margin-top:15px; }
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto 20px auto;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
+
+.hero-video {
+    width: 100%;
+    height: auto;
+    display: block;
+
+    transform: scale(1.02);
+    -webkit-transform: translateZ(0);
+
+    filter: contrast(1.05) saturate(1.1);
+
+    object-fit: cover;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.video-overlay{
+   pointer-events:none;
+}
+
+/* Footer */
+footer{ padding:40px; text-align:center; opacity:0.6; }
+
+/* Forms */
+form input, form select { width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:none; }
+form button { width:100%; padding:10px; border-radius:6px; border:none; background:#00ffd5; color:#000; font-weight:bold; cursor:pointer; }
+form button:hover{ opacity:0.85; }
+
+.cta{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.contact-buttons{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.faq-item {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  padding: 15px 20px;
+  cursor: pointer;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  margin-top: 0;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 300px;
+  opacity: 1;
+  margin-top: 10px;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.faq-item.active .arrow {
+  transform: rotate(180deg);
+}
+
+/* =========================================
+📱 MOBILE OPTIMIZATION PREMIUM
+========================================= */
+
+@media (max-width: 768px){
+
+  body{
+    overflow-x:hidden;
+  }
+
+  /* HEADER */
+  header,
+  div[style*="position:sticky"]{
+    padding:14px 16px !important;
+  }
+
+  strong{
+    font-size:16px !important;
+  }
+
+  #btnExplore{
+    font-size:14px;
+    margin-right:10px !important;
+  }
+
+  /* HERO */
+  .hero{
+    padding:55px 20px;
+    text-align:center;
+  }
+
+  .hero h1{
+    font-size:34px;
+    line-height:1.15;
+  }
+
+  .hero p{
+    font-size:16px;
+    line-height:1.6;
+    margin-top:20px;
+    opacity:0.9;
+  }
+
+  /* CTA */
+  .cta{
+    width:100%;
+    margin-top:30px;
+  }
+
+  .cta button{
+    width:100%;
+    padding:16px;
+    font-size:15px;
+    border-radius:14px;
+    margin:0;
+  }
+
+  /* SECTIONS */
+  .section{
+    padding:50px 20px;
+  }
+
+  .section h2{
+    font-size:28px;
+    line-height:1.2;
+    margin-bottom:25px;
+    text-align:center;
+  }
+
+  /* CARDS */
+  .marketplace{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .card{
+    padding:22px;
+    border-radius:18px;
+    margin-bottom:18px;
+    backdrop-filter:blur(8px);
+  }
+
+  .card h3{
+    font-size:20px;
+    line-height:1.3;
+  }
+
+  .card p{
+    font-size:15px;
+    line-height:1.6;
+  }
+
+  /* BADGES */
+  .badge{
+    font-size:11px;
+    padding:5px 10px;
+    border-radius:999px;
+  }
+
+  /* IMAGE */
+  img{
+    width:100%;
+    max-width:100%;
+    border-radius:16px;
+  }
+
+  /* FAQ */
+  .faq-item{
+    padding:16px;
+    border-radius:16px;
+  }
+
+  .faq-question{
+    font-size:15px;
+    line-height:1.4;
+  }
+
+  .faq-answer p{
+    font-size:14px;
+    line-height:1.7;
+  }
+
+  /* PAYMENT BOX */
+  #paymentBox{
+    padding:25px !important;
+    margin:20px;
+  }
+
+  /* CONTACT BUTTONS */
+  .contact-buttons a{
+    width:100%;
+    text-align:center;
+    box-sizing:border-box;
+  }
+
+  /* FOOTER */
+  footer{
+    padding:30px 20px;
+    font-size:13px;
+  }
+
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER STICKY -->
+<div style="
+  position:sticky;
+  top:0;
+  width:100%;
+  background:#0f0f0f;
+  padding:15px 20px;
+  z-index:1000;
+  border-bottom:1px solid rgba(0,255,213,0.2);
+  backdrop-filter: blur(6px);
+  display:flex;
+  align-items:center;
+">
+
+  <a href="./index.html" style="text-decoration:none;">
+    <strong style="color:#00ffd5; letter-spacing:1px; font-size:18px;">
+      NEEDLY
+    </strong>
+  </a>
+
+<a id="btnExplore" style="
+  margin-left:auto;
+  padding-right:18px;
+  color:#00ffd5;
+  cursor:pointer;
+  text-decoration:none;
+  font-weight:bold;
+">
+  Marketplace
+</a>
+
+</div>
+
+<section class="hero" id="heroSection">
+<h1>Des <span>micro-solutions financières</span><br>pour créer, développer et monétiser ton business en ligne</h1>
+<p>NEEDLY est la première marketplace de solutions digitales ultra-ciblées.  
+Chaque solution résout un seul problème précis lié au business,
+à l’investissement et à l’indépendance financière.  
+Directement actionnable.</p>
+
+<div class="cta">
+  <button class="primary" id="btnExploreHero">Voir ma solution maintenant</button>
+  <button class="secondary" onclick="showPayment()">Lancer mon accès – 79€</button>
+</div>
+
+<!-- 🔽 SECTION CORRECTEMENT RATTACHÉE À LA LANDING PAGE -->
+<section class="section">
+<h2>🎯 Des solutions conçues pour des problèmes réels</h2>
+
+<div class="marketplace">
+
+  <div class="card">
+    <div class="badge">Lancer rapidement</div>
+    <h3>Lancer ton business digital</h3>
+    <p>Créer ton premier produit digital, trouver une idée rentable et démarrer même en partant de zéro.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge">Monétiser efficacement</div>
+    <h3>Transformer ton audience en clients</h3>
+    <p>Vendre sur les réseaux sociaux et automatiser tes ventes sans publicité.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge">Clarté financière</div>
+    <h3>Construire une indépendance durable</h3>
+    <p>Structurer tes revenus, investir intelligemment et sécuriser ton futur financier.</p>
+  </div>
+
+</div>
+</section>
+<!-- 🔼 FIN -->
+
+</section>
+
+<!-- ✅ CORRECTION JS -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const heroBtn = document.getElementById("btnExploreHero");
+  const exploreBtn = document.getElementById("btnExplore");
+
+  if (heroBtn && exploreBtn) {
+    heroBtn.addEventListener("click", () => {
+      exploreBtn.click();
+    });
+  }
+});
+</script>
+
+
+<!-- APERÇU DE LA PLATEFORME NEEDLY -->
+<section class="section">
+<h2>Aperçu de la plateforme NEEDLY</h2>
+<div class="video-wrapper">
+<video
+  class="hero-video"
+  autoplay
+  muted
+  loop
+  playsinline
+  webkit-playsinline
+  preload="auto"
+>
+  <source src="bibliotheque-needly.mp4" type="video/mp4">
+</video>
+</div>
+
+<div class="card">
+<h3>Une bibliothèque complète de solutions digitales intégrées dans la plateforme.</h3>
+<p><strong>Objectif : Apprendre, appliquer et scaler en continu</strong></p>
+
+<ul>
+<li>Système structuré clé en main</li>
+<li>Solutions prêtes à l’emploi</li>
+<li>Accès réservé aux membres</li>
+<li>Contenu exclusif non public</li>
+</ul>
+</div>
+</section>
+
+<section class="section" id="marketplaceSection">
+<h2>⚡️ Solutions populaires</h2>
+<div class="marketplace">
+<div class="card"><div class="badge">Digital</div><h3>Revenus</h3><p>Générer de l’Argent en Ligne</p>
+  <p>Découvre comment générer un revenu régulier directement depuis Internet.</p>
+  <div class="price"></div>
+</div>
+<div class="card"><div class="badge">Finance</div><h3>Investir & Comprendre la Finance Numérique</h3>
+<p>Investis efficacement tout en maîtrisant les enjeux de la finance numérique.</p>
+<div class="price"></div></div>
+<div class="card"><div class="badge">Business</div><h3>Créer un Véritable Business Digital</h3>
+<p>Apprends à créer un business digital solide et rentable de A à Z.</p>
+<div class="price"></div></div>
+</div>
+<div class="card"><div class="badge">Niches</div><h3>Les Niches Rentables</h3>
+<p>Découvre les meilleures niches rentables pour lancer ou booster ton business.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Templates</div><h3>Template à Copier-Coller</h3>
+<p>Accède à un template concret et actionnable prêt à l’usage pour ton business.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Présence</div><h3>Construire ta Présence en Ligne</h3>
+<p>Développe une présence en ligne forte et mémorable pour ton business.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Communauté</div><h3>Bâtir ta Communauté en Ligne</h3>
+<p>Bâtis une communauté solide et engagée autour de ton business digital.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Profil</div><h3>Optimiser son Profil</h3>
+<p>Optimise efficacement ton profil pour attirer l’attention et inspirer confiance.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Psychologie</div><h3>Psychologie de l’Achat</h3>
+<p>Comprends les mécanismes psychologiques qui poussent à l’achat en ligne.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Finance</div><h3>Construit Ton Indépendance Financière en Ligne</h3>
+<p>Construit une indépendance financière durable en ligne et sécurise tes revenus.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Funnel</div><h3>Funnel Automatique</h3>
+<p>Transformer tes prospects en clients fidèles grâce à un système automatique et rentable.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Digital</div><h3>Vivre de Tes Produits Digitaux</h3>
+<p>Créer une usine à revenus passifs pour vivre pleinement de tes produits digitaux.</p>
+<div class="price"></div>
+</div>
+</section>
+
+<section class="section">
+<h2>Avis clients</h2>
+
+<div class="card">
+<p>⭐⭐⭐⭐⭐</p>
+<p>– Il y a 2 jours<br>
+“Franchement surpris. J’ai testé une solution pour créer mon premier produit digital et j’ai réussi à le lancer en 48h. C’est simple, efficace, rien à voir avec les formations longues.”<br>
+Écrit 2 jours après l’achat</p>
+<p><strong>- Hugo L.</strong></p>
+</div>
+
+<div class="card">
+<p>⭐⭐⭐⭐⭐</p>
+<p>– Il y a 5 jours<br>
+“Enfin une plateforme qui va droit au but. J’avais tendance à trop réfléchir, là j’ai appliqué direct et j’ai eu mes premiers résultats.”<br>
+Écrit 5 jours après l’achat</p>
+<p><strong>- Marion T.</strong></p>
+</div>
+
+<div class="card">
+<p>⭐⭐⭐⭐⭐</p>
+<p>– Il y a 9 jours<br>
+“Le concept de ‘1 problème = 1 solution’ est ultra puissant. Ça m’a évité de perdre des semaines à chercher quoi faire.”<br>
+Écrit 9 jours après l’achat</p>
+<p><strong>- Vincent B.</strong></p>
+</div>
+
+</section>
+
+<!-- 💳 PAYMENT BOX -->
+<div id="paymentBox" class="card" style="display:none; padding:40px;">
+
+<h2>💳 Paiement – NEEDLY</h2>
+
+<p><strong>Prix :</strong> 79€ (paiement unique)</p>
+
+<h2>Moyens de paiement</h2>
+
+<ul>
+<li>💳 Virement bancaire</li>
+</ul>
+
+<h2>Conditions d’accès</h2>
+
+<p>
+Ton accès à NEEDLY est activé dès validation du paiement.<br><br>
+
+Nous vérifions chaque transaction afin de garantir un accès sécurisé, rapide et sans erreur de traitement.
+</p>
+
+<h2>🚀 Rejoindre NEEDLY</h2>
+
+<div class="contact-buttons">
+
+<a href="https://wa.me/590690111817"
+   style="background:#4da6ff; padding:15px 25px; border-radius:8px; color:white; text-decoration:none; display:inline-block;">
+   📞 Me contacter pour les infos
+</a>
+
+<a href="mailto:joshiiroprestance@gmail.com"
+   style="background:#4da6ff; padding:15px 25px; border-radius:8px; color:white; text-decoration:none; display:inline-block;">
+   📨 Recevoir les instructions par email
+</a>
+
+</div>
+
+<p style="margin-top:15px;">
+📩 Après le paiement, envoie simplement ta preuve pour activer ton accès.
+</p>
+
+</div>
+
+<!-- FAQ -->
+<section class="section">
+<h2>FAQ</h2>
+
+<div class="faq-item">
+<div class="faq-question">NEEDLY est fait pour qui ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>Pour les débutants, créateurs et entrepreneurs qui veulent :
+	•	Lancer un business en ligne
+	•	Générer des revenus digitaux
+	•	Comprendre la finance numérique
+	•	Mettre en place des systèmes automatiques simples et efficaces
+
+Même si tu pars de zéro, tu peux agir dès aujourd’hui.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Quand et comment vais-je recevoir mon accès ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>Dès validation de ton paiement, ton accès est activé rapidement.  
+
+Tu reçois les instructions directement par email ou WhatsApp selon ton choix.  
+
+En général, cela prend seulement quelques minutes.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Est-ce que je peux vraiment appliquer les solutions ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>Oui. Chaque solution est conçue pour être simple, claire et immédiatement actionnable, sans prérequis technique.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Est-ce que NEEDLY garantit des résultats ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>NEEDLY ne garantit pas de résultats automatiques, car ils dépendent directement de ton exécution.
+
+En revanche, chaque solution a été structurée pour te donner une méthode claire, actionnable et éprouvée, afin d’accélérer
+ton passage à l’action, réduire les erreurs inutiles et avancer avec un cadre précis dès le départ.</p></div>
+</div>
+
+</section>
+
+<footer>
+<p>© <span id="year"></span> NEEDLY — Micro-solutions exclusives. Aucun équivalent ailleurs.</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script>
+// =======================================
+// 🟢 JS complet pour boutons
+// =======================================
+
+// ==========================
+// ✅ Fonctions boutons 
+// ==========================
+
+
+function showPayment(){
+  const paymentBox = document.getElementById("paymentBox");
+
+  if(paymentBox){
+    paymentBox.style.display = "block";
+    paymentBox.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+function toggleIBAN(){
+  const ibanBox = document.getElementById("ibanBox");
+  if(ibanBox){
+    ibanBox.style.display =
+      ibanBox.style.display === "none" ? "block" : "none";
+  }
+}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  // =========================
+  // FAQ TOGGLE
+  // =========================
+  document.querySelectorAll(".faq-question").forEach(item => {
+    item.addEventListener("click", () => {
+
+      const parent = item.closest(".faq-item");
+
+      document.querySelectorAll(".faq-item").forEach(el => {
+        if (el !== parent) {
+          el.classList.remove("active");
+        }
+      });
+
+      parent.classList.toggle("active");
+    });
+  });
+
+  // =========================
+  // SCROLL MARKETPLACE
+  // =========================
+  const btn = document.getElementById("btnExplore");
+
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const target = document.getElementById("marketplaceSection");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  }
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const video = document.querySelector(".hero-video");
+
+  if(video){
+
+    // force le mute
+    video.muted = true;
+
+    // tente autoplay
+    const playPromise = video.play();
+
+    if(playPromise !== undefined){
+      playPromise.catch(() => {
+
+        // retry après interaction utilisateur
+        document.addEventListener("touchstart", () => {
+          video.play();
+        }, { once: true });
+
+      });
+    }
+
+    // relance si Safari pause la vidéo
+    video.addEventListener("pause", () => {
+
+      if(!video.ended){
+        video.play();
+      }
+
+    });
+
+  }
+
+});
+</script>
+
+</body>
+</html>

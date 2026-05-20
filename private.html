@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>NEEDLY – Micro-solutions</title>
+
+<!-- Favicon (logo onglet navigateur) -->
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+
+<style>
+strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+strong::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("logo.png") no-repeat center;
+  background-size: contain;
+  display: inline-block;
+}
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { margin:0; font-family:'Inter',Arial,sans-serif; background:linear-gradient(135deg,#0f0c29,#302b63,#24243e); color:#fff; }
+a { text-decoration:none; color:inherit; cursor:pointer; }
+header { padding:25px 40px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); }
+.logo { font-size:26px; font-weight:800; color:#00ffd5; }
+nav a { margin-left:30px; font-weight:500; opacity:0.85; }
+nav a:hover { opacity:1; }
+
+/* Hero / Marketplace */
+.hero { padding:100px 60px; max-width:900px; }
+.hero h1{ font-size:56px; font-weight:900; line-height:1.1; } 
+.hero span{ color:#00ffd5; }
+.hero p{ margin-top:25px; font-size:20px; opacity:0.85; }
+.cta{ margin-top:40px; }
+.cta button{ background:#00ffd5; border:none; padding:16px 28px; font-size:16px; font-weight:700; border-radius:10px; cursor:pointer; margin-right:15px; transition:0.2s; }
+.cta button:hover{ opacity:0.8; }
+.cta .secondary{ background:transparent; color:#00ffd5; border:1px solid #00ffd5; }
+
+.section{ padding:80px 60px; }
+.section h2{ font-size:38px; margin-bottom:30px; }
+.marketplace{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:25px; }
+.card{
+  background: rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:25px;
+  transition:0.3s;
+  cursor:pointer;
+  margin-bottom:25px;
+}
+.card:hover{ transform:translateY(-6px); background:rgba(255,255,255,0.1); }
+.card h3{ margin-bottom:10px; color:#00ffd5; }
+.badge{ display:inline-block; padding:6px 12px; background:rgba(0,255,213,0.15); border-radius:8px; font-size:12px; margin-bottom:15px; }
+.price{ font-size:22px; font-weight:800; margin-top:15px; }
+
+/* Auth modals */
+.auth-box{ max-width:420px; margin:40px auto; background:rgba(255,255,255,0.08); padding:40px; border-radius:18px; display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1000; }
+.auth-box.active{ display:block; }
+.auth-box h2{text-align:center; margin-bottom:30px;}
+.auth-box input{ width:100%; padding:14px; margin-bottom:15px; border-radius:10px; border:none; }
+.auth-box button{ width:100%; padding:14px; border-radius:10px; border:none; background:#00ffd5; color:#000; font-weight:bold; cursor:pointer; transition:0.2s; }
+.auth-box button:hover{ opacity:0.8; }
+.auth-box .close{ position:absolute; top:15px; right:20px; font-size:28px; cursor:pointer; }
+
+/* Dashboard */
+#dashboard{ display:none; min-height:100vh; color:#fff; } /* ✅ correction : display:flex supprimé */
+.sidebar{ width:260px; background:rgba(0,0,0,0.35); padding:30px; }
+.sidebar h2{ color:#00ffd5; margin-bottom:20px; }
+.sidebar a{ display:block; color:#fff; margin-bottom:15px; cursor:pointer; opacity:0.85; }
+.sidebar a:hover { opacity:1; }
+.sidebar a.logout{ background:red; padding:8px; text-align:center; border-radius:6px; margin-top:30px; }
+.dashboard-content{ flex:1; padding:40px; overflow-y:auto; }
+.dashboard-section{ display:none; margin-bottom:40px; background: rgba(255,255,255,0.08); padding:20px; border-radius:16px; }
+.dashboard-section.active{ display:block; }
+.dashboard-section h2{ color:#00ffd5; margin-bottom:15px; }
+.dashboard-section ul{ list-style:none; padding-left:0; }
+.dashboard-section li{ padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1);}
+.dashboard-section button{ background:#00ffd5; color:#000; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; margin-top:10px; }
+.dashboard-section button:hover{ opacity:0.8; }
+
+/* Footer */
+footer{ padding:40px; text-align:center; opacity:0.6; }
+
+/* Forms */
+form input, form select { width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:none; }
+form button { width:100%; padding:10px; border-radius:6px; border:none; background:#00ffd5; color:#000; font-weight:bold; cursor:pointer; }
+form button:hover{ opacity:0.85; }
+
+.faq-item {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  padding: 15px 20px;
+  cursor: pointer;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  margin-top: 0;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 300px;
+  opacity: 1;
+  margin-top: 10px;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.faq-item.active .arrow {
+  transform: rotate(180deg);
+}
+
+/* =========================
+   🔥 FIX GLOBAL MOBILE
+   ========================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Containers fluides */
+.hero,
+.section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header responsive */
+header {
+  flex-wrap: wrap;
+  padding: 15px 20px !important;
+}
+
+/* Nav flexible */
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+nav a {
+  margin-left: 0 !important;
+}
+
+/* Grid parfaite */
+.marketplace {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Cards clean */
+.card {
+  width: 100%;
+}
+
+/* Texte fluide */
+.hero h1 {
+  font-size: clamp(28px, 6vw, 56px);
+}
+
+.hero p {
+  font-size: clamp(14px, 3vw, 20px);
+}
+
+/* Sections */
+.section h2 {
+  font-size: clamp(22px, 5vw, 38px);
+}
+
+/* =========================
+   📱 MOBILE ONLY
+   ========================= */
+
+@media (max-width: 768px) {
+
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  nav {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .hero {
+    padding: 60px 20px !important;
+    text-align: center;
+  }
+
+  .section {
+    padding: 50px 20px !important;
+  }
+
+  .cta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cta button {
+    width: 100%;
+    margin: 10px 0;
+  }
+}
+
+/* =========================
+   📱 DASHBOARD MOBILE FIX
+   ========================= */
+
+#dashboard {
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+/* Content */
+.dashboard-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+
+  #dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .sidebar h2 {
+    display: none;
+  }
+
+  .sidebar a {
+    white-space: nowrap;
+    background: rgba(255,255,255,0.08);
+    padding: 10px 15px;
+    border-radius: 10px;
+  }
+
+  .sidebar a.logout {
+    background: red;
+  }
+
+  .dashboard-content {
+    padding: 20px;
+  }
+
+  .dashboard-section {
+    padding: 15px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER STICKY -->
+<header style="
+  position:sticky;
+  top:0;
+  width:100%;
+  background:#0f0f0f;
+  padding:15px 20px;
+  z-index:1000;
+  border-bottom:1px solid rgba(0,255,213,0.2);
+  backdrop-filter: blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+">
+
+  <a href="./index.html" style="text-decoration:none;">
+    <strong style="color:#00ffd5; letter-spacing:1px; font-size:18px;">
+      NEEDLY
+    </strong>
+  </a>
+
+<nav style="display:flex; gap:15px; align-items:center;">
+  <a id="btnExplore" href="#" style="color:#fff; text-decoration:none;">Marketplace</a>
+  <a id="linkSell" href="#" style="color:#fff; text-decoration:none;">Vendre</a>
+  <a id="linkLogin" href="#" style="color:#fff; text-decoration:none;">Connexion</a>
+  <a id="linkSignup" href="#" style="margin-left:auto; margin-right:25px; color:#00ffd5; text-decoration:none;">Inscription</a>
+</nav>
+
+</header>
+
+<section class="hero" id="heroSection">
+<h1>Des <span>micro-solutions financières</span><br>pour créer, développer et monétiser ton business en ligne</h1>
+<p>NEEDLY est la première marketplace de solutions digitales ultra-ciblées.  
+Chaque solution résout un seul problème précis lié au business,
+à l’investissement et à l’indépendance financière.  
+Directement actionnable.</p>
+
+<div class="cta">
+  <button id="btnExploreHero">Voir ma solution maintenant</button>
+  <button class="secondary" id="btnSell">Accéder à ma solution</button>
+</div>
+
+<!-- 🔽 SECTION CORRECTEMENT RATTACHÉE À LA LANDING PAGE -->
+<section class="section">
+<h2>🎯 Des solutions conçues pour des problèmes réels</h2>
+
+<div class="marketplace">
+
+  <div class="card">
+    <div class="badge">Lancer rapidement</div>
+    <h3>Lancer ton business digital</h3>
+    <p>Créer ton premier produit digital, trouver une idée rentable et démarrer même en partant de zéro.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge">Monétiser efficacement</div>
+    <h3>Transformer ton audience en clients</h3>
+    <p>Vendre sur les réseaux sociaux et automatiser tes ventes sans publicité.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge">Clarté financière</div>
+    <h3>Construire une indépendance durable</h3>
+    <p>Structurer tes revenus, investir intelligemment et sécuriser ton futur financier.</p>
+  </div>
+
+</div>
+</section>
+<!-- 🔼 FIN -->
+
+</section>
+
+<!-- ✅ CORRECTION JS -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const heroBtn = document.getElementById("btnExploreHero");
+  const exploreBtn = document.getElementById("btnExplore");
+
+  if (heroBtn && exploreBtn) {
+    heroBtn.addEventListener("click", () => {
+      exploreBtn.click();
+    });
+  }
+});
+</script>
+
+<section class="section" id="marketplaceSection">
+<h2>⚡️ Solutions populaires</h2>
+<div class="marketplace">
+<div class="card"><div class="badge">Digital</div><h3>Revenus</h3><p>Générer de l’Argent en Ligne</p>
+  <p>Découvre comment générer un revenu régulier directement depuis Internet.</p>
+  <div class="price"></div>
+</div>
+<div class="card"><div class="badge">Finance</div><h3>Investir & Comprendre la Finance Numérique</h3>
+<p>Investis efficacement tout en maîtrisant les enjeux de la finance numérique.</p>
+<div class="price"></div></div>
+<div class="card"><div class="badge">Business</div><h3>Créer un Véritable Business Digital</h3>
+<p>Apprends à créer un business digital solide et rentable de A à Z.</p>
+<div class="price"></div></div>
+</div>
+<div class="card"><div class="badge">Niches</div><h3>Les Niches Rentables</h3>
+<p>Découvre les meilleures niches rentables pour lancer ou booster ton business.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Templates</div><h3>Template à Copier-Coller</h3>
+<p>Accède à un template concret et actionnable prêt à l’usage pour ton business.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Présence</div><h3>Construire ta Présence en Ligne</h3>
+<p>Développe une présence en ligne forte et mémorable pour ton business.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Communauté</div><h3>Bâtir ta Communauté en Ligne</h3>
+<p>Bâtis une communauté solide et engagée autour de ton business digital.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Profil</div><h3>Optimiser son Profil</h3>
+<p>Optimise efficacement ton profil pour attirer l’attention et inspirer confiance.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Psychologie</div><h3>Psychologie de l’Achat</h3>
+<p>Comprends les mécanismes psychologiques qui poussent à l’achat en ligne.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Finance</div><h3>Construit Ton Indépendance Financière en Ligne</h3>
+<p>Construit une indépendance financière durable en ligne et sécurise tes revenus.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Funnel</div><h3>Funnel Automatique</h3>
+<p>Transformer tes prospects en clients fidèles grâce à un système automatique et rentable.</p>
+<div class="price"></div>
+</div>
+<div class="card"><div class="badge">Digital</div><h3>Vivre de Tes Produits Digitaux</h3>
+<p>Créer une usine à revenus passifs pour vivre pleinement de tes produits digitaux.</p>
+<div class="price"></div>
+</div>
+</section>
+
+<section class="section" id="avisSection">
+<h2>Avis clients</h2>
+
+<div class="card">
+<p>⭐⭐⭐⭐⭐</p>
+<p>– Il y a 2 jours<br>
+“Franchement surpris. J’ai testé une solution pour créer mon premier produit digital et j’ai réussi à le lancer en 48h. C’est simple, efficace, rien à voir avec les formations longues.”<br>
+Écrit 2 jours après l’achat</p>
+<p><strong>- Hugo L.</strong></p>
+</div>
+
+<div class="card">
+<p>⭐⭐⭐⭐⭐</p>
+<p>– Il y a 5 jours<br>
+“Enfin une plateforme qui va droit au but. J’avais tendance à trop réfléchir, là j’ai appliqué direct et j’ai eu mes premiers résultats.”<br>
+Écrit 5 jours après l’achat</p>
+<p><strong>- Marion T.</strong></p>
+</div>
+
+<div class="card">
+<p>⭐⭐⭐⭐⭐</p>
+<p>– Il y a 9 jours<br>
+“Le concept de ‘1 problème = 1 solution’ est ultra puissant. Ça m’a évité de perdre des semaines à chercher quoi faire.”<br>
+Écrit 9 jours après l’achat</p>
+<p><strong>- Vincent B.</strong></p>
+</div>
+
+</section>
+
+<section class="section" id="faqSection">
+<h2>FAQ</h2>
+
+<div class="faq-item">
+<div class="faq-question">NEEDLY est fait pour qui ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>Pour les débutants, créateurs et entrepreneurs qui veulent :
+	•	Lancer un business en ligne
+	•	Générer des revenus digitaux
+	•	Comprendre la finance numérique
+	•	Mettre en place des systèmes automatiques simples et efficaces
+
+Même si tu pars de zéro, tu peux agir dès aujourd’hui.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Quand et comment vais-je recevoir mon accès ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>Dès validation de ton paiement, ton accès est activé rapidement.  
+
+Tu reçois les instructions directement par email ou WhatsApp selon ton choix.  
+
+En général, cela prend seulement quelques minutes.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Est-ce que je peux vraiment appliquer les solutions ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>Oui. Chaque solution est conçue pour être simple, claire et immédiatement actionnable, sans prérequis technique.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Est-ce que NEEDLY garantit des résultats ? <span class="arrow">▼</span></div>
+<div class="faq-answer"><p>NEEDLY ne garantit pas de résultats automatiques, car ils dépendent directement de ton exécution.
+
+En revanche, chaque solution a été structurée pour te donner une méthode claire, actionnable et éprouvée, afin d’accélérer
+ton passage à l’action, réduire les erreurs inutiles et avancer avec un cadre précis dès le départ.</p></div>
+</div>
+
+</section>
+
+<!-- Auth modals -->
+<div class="auth-box" id="loginBox">
+<span class="close" onclick="closeAuth('loginBox')">&times;</span>
+<h2>Connexion</h2>
+<input type="email" id="loginEmail" placeholder="Email">
+<input type="password" id="loginPassword" placeholder="Mot de passe">
+<button onclick="login()">Se connecter</button>
+</div>
+
+<div class="auth-box" id="signupBox">
+<span class="close" onclick="closeAuth('signupBox')">&times;</span>
+<h2>Inscription</h2>
+<input type="text" id="signupName" placeholder="Nom">
+<input type="email" id="signupEmail" placeholder="Email">
+<input type="password" id="signupPassword" placeholder="Mot de passe">
+<button onclick="createAccount()">Créer un compte</button>
+</div>
+
+
+<!-- Dashboard -->
+<div id="dashboard">
+<div class="sidebar">
+<h2>Menu</h2>
+<a onclick="showSection('home')">Accueil</a>
+<a onclick="showSection('finder')">Trouver ma solution</a>
+<a onclick="showSection('exclusive')">Solutions exclusives</a>
+<a onclick="showSection('automatisation')">Système et automatisation</a>
+<a onclick="showSection('library')">Bibliothèque</a>
+<a onclick="showSection('account')">Mon compte</a>
+<a onclick="showSection('plans')">Plans & facturations</a>
+<a onclick="showSection('terms')">Termes & conditions</a>
+<a class="logout" onclick="logout()">Se déconnecter</a>
+</div>
+
+
+<div class="dashboard-content">
+<!-- Sections dynamiques, identiques à ton code original -->
+<div id="home" class="dashboard-section active">
+<h2>Home</h2>
+<p>Bienvenue dans Needly, l’espace où tu vas apprendre à construire ton autonomie financière. Ici, chaque action 
+que tu fais te rapproche de revenus réels et durables. Ton accès est activé. Il ne te reste plus qu’à choisir 
+le problème que tu veux résoudre et passer à l’action.</p>
+</div>
+
+<div id="finder" class="dashboard-section">
+<h2>Trouver ma solution</h2>
+<p>Identifie ton problème prioritaire. NEEDLY te guide directement vers la solution la plus efficace selon ton niveau et ton objectif.</p>
+<button onclick="showSection('library')">Voir toutes les solutions</button>
+<button onclick="showSection('exclusive')">Découvrir les solutions exclusives</button>
+</div>
+
+
+<div id="exclusive" class="dashboard-section">
+<h2>Solutions exclusives</h2>
+<p>L’accès à ces solutions est réservé aux membres NEEDLY.
+Elles ciblent des leviers avancés de performance : conversion, automatisation et génération de revenus passifs.</p>
+<ul>
+<li>Psychologie de l’achat</li>
+<li>Funnel automatique</li>
+<li>Usine à revenus passifs</li>
+</ul>
+<button onclick="showSection('library')">Accéder aux solutions</button>
+</div>
+
+<div id="automatisation" class="dashboard-section">
+<h2>Systèmes & automatisation</h2>
+<p>Crée une machine digitale qui travaille pour toi : funnels, automatisation des ventes et systèmes réplicables.</p>
+<button onclick="showSection('library')">Voir les systèmes disponibles</button>
+</div>
+
+<div id="library" class="dashboard-section">
+<h2>Bibliothèque de solutions</h2>
+<p>Accède à la solution conçue pour résoudre ton problème actuel.</p>
+
+<button onclick="showSection('sol1')">💸 Générer de l’argent en ligne</button>
+<button onclick="showSection('sol2')">🌐 Créer un business digital</button>
+<button onclick="showSection('sol3')">📄 Créer & vendre ton premier produit</button>
+<button onclick="showSection('sol4')">🌐 Construire ta présence en ligne</button>
+<button onclick="showSection('sol5')">👥 Bâtir une communauté</button>
+<button onclick="showSection('sol6')">🧲 Optimiser son profil</button>
+<button onclick="showSection('sol7')">🔄 Funnel automatique</button>
+<button onclick="showSection('sol8')">🧠 Psychologie de l’achat</button>
+<button onclick="showSection('sol9')">📈 Stratégies d’investissement</button>
+<button onclick="showSection('sol10')">💎 Niches rentables</button>
+<button onclick="showSection('sol11')">🏦 Indépendance financière</button>
+<button onclick="showSection('sol12')">💰 Usine à revenus passifs</button>
+<button onclick="showSection('sol13')">💡 Trouver une idée de business rentable</button>
+<button onclick="showSection('sol14')">✅ Valider une idée sans perdre d’argent</button>
+<button onclick="showSection('sol15')">📊 Analyser un marché comme un expert</button>
+<button onclick="showSection('sol16')">🎯 Identifier une niche ultra rentable</button>
+<button onclick="showSection('sol17')">🔥 Créer une offre irrésistible</button>
+<button onclick="showSection('sol18')">⚔️ Se différencier dans un marché saturé</button>
+<button onclick="showSection('sol19')">👑 Positionner sa marque en premium</button>
+<button onclick="showSection('sol20')">🌐 Construire un business digital rentable</button>
+<button onclick="showSection('sol21')">📈 Scaler un business sans publicité</button>
+<button onclick="showSection('sol22')">💸 Passer de 0 à 10k€/mois</button>
+<button onclick="showSection('sol23')">📝 Écrire une page de vente qui convertit</button>
+<button onclick="showSection('sol24')">🛒 Transformer un visiteur en client</button>
+<button onclick="showSection('sol25')">📊 Augmenter son taux de conversion</button>
+<button onclick="showSection('sol26')">💎 Créer une offre à forte valeur perçue</button>
+<button onclick="showSection('sol27')">🚀 Faire ses premières ventes sans audience</button>
+<button onclick="showSection('sol28')">💬 Closer une vente en DM efficacement</button>
+<button onclick="showSection('sol29')">🧠 Gérer les objections clients</button>
+<button onclick="showSection('sol30')">🎯 Déclencher l’achat sans être agressif</button>
+<button onclick="showSection('sol31')">⭐ Utiliser la preuve sociale pour vendre</button>
+<button onclick="showSection('sol32')">💰 Augmenter la valeur moyenne d’un client</button>
+<button onclick="showSection('sol33')">🔄 Créer un funnel automatique simple</button>
+<button onclick="showSection('sol34')">🤖 Automatiser ses ventes avec Systeme.io</button>
+<button onclick="showSection('sol35')">🧲 Créer une machine à leads automatique</button>
+<button onclick="showSection('sol36')">💵 Transformer du trafic en revenus passifs</button>
+<button onclick="showSection('sol37')">🏗️ Structurer un tunnel de vente complet</button>
+<button onclick="showSection('sol38')">⚙️ Optimiser chaque étape d’un funnel</button>
+<button onclick="showSection('sol39')">📧 Créer une séquence email qui vend</button>
+<button onclick="showSection('sol40')">🎯 Faire du retargeting efficace</button>
+</div>
+<!-- ===================== -->
+<!-- SOLUTIONS NEEDLY -->
+<!-- ===================== -->
+
+<div class="content">
+
+<!-- SOLUTION 1 -->
+<div id="sol1" class="dashboard-section">
+<h1>💸 Générer de l’argent en ligne</h1>
+<p>Découvre les méthodes concrètes pour créer tes premiers revenus digitaux, même sans expérience.</p>
+
+<ul>
+<li>Choisir un modèle rentable</li>
+<li>Éviter les arnaques</li>
+<li>Passer à l’action rapidement</li>
+</ul>
+
+<p><strong>📥 Télécharger la solution :</strong></p>
+<a href="Générer-de-l’argent-en-ligne.pdf" download>
+<button>⬇️ Télécharger la solution (PDF)</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 2 -->
+<div id="sol2" class="dashboard-section">
+<h1>🌐 Créer un business digital</h1>
+<p>Pose des bases solides pour un business digital durable.</p>
+
+<ul>
+<li>Idée claire</li>
+<li>Offre structurée</li>
+<li>Vision long terme</li>
+</ul>
+
+<a href="Un-véritable-business-digital.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 3 -->
+<div id="sol3" class="dashboard-section">
+<h1>📄 Créer & vendre ton premier produit digital</h1>
+<p>Un système clair pour réaliser ta première vente.</p>
+
+<ul>
+<li>Création rapide</li>
+<li>Prix intelligent</li>
+<li>Vente simple</li>
+</ul>
+
+<a href="Ebook-comment-créer-ton-produit-numérique.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 4 -->
+<div id="sol4" class="dashboard-section">
+<h1>🌐 Construire ta présence en ligne</h1>
+<p>Deviens visible, crédible et stratégique.</p>
+
+<ul>
+<li>Positionnement</li>
+<li>Contenu</li>
+<li>Autorité</li>
+</ul>
+
+<a href="Construire-ta-présence-en-ligne.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 5 -->
+<div id="sol5" class="dashboard-section">
+<h1>👥 Bâtir une communauté rentable</h1>
+<p>Transforme ton audience en communauté fidèle.</p>
+
+<ul>
+<li>Engagement</li>
+<li>Confiance</li>
+<li>Monétisation</li>
+</ul>
+
+<a href="Bâtir-ta-communauté-en-ligne.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 6 -->
+<div id="sol6" class="dashboard-section">
+<h1>🧲 Optimiser ton profil</h1>
+<p>Ton profil devient un véritable aimant à opportunités et conversions.</p>
+
+<ul>
+<li>Bio persuasive orientée valeur</li>
+<li>Photo et branding cohérents</li>
+<li>CTA clair et stratégique</li>
+</ul>
+
+<a href="Optimiser-efficacement-son-profil.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 7 -->
+<div id="sol7" class="dashboard-section">
+<h1>🔄 Funnel automatique</h1>
+<p>Un système automatisé qui transforme des visiteurs en clients, jour et nuit.</p>
+
+<ul>
+<li>Pages de capture optimisées</li>
+<li>Séquences email automatiques</li>
+<li>Conversion sans intervention humaine</li>
+</ul>
+
+<a href="Funnel-automatique-capable-de-transformer-des-prospects-en-clients-fidèles.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 8 -->
+<div id="sol8" class="dashboard-section">
+<h1>🧠 Psychologie de l’achat</h1>
+<p>Maîtrise les leviers mentaux qui déclenchent la décision d’achat.</p>
+
+<ul>
+<li>Émotions et biais cognitifs</li>
+<li>Rareté et urgence</li>
+<li>Autorité et preuve sociale</li>
+</ul>
+
+<a href="Mécanismes-psychologiques-poussent-à-l’achat-en-ligne.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 9 -->
+<div id="sol9" class="dashboard-section">
+<h1>📈 Stratégies d’investissement</h1>
+<p>Construis une stratégie d’investissement stable et intelligente.</p>
+
+<ul>
+<li>Gestion du risque avancée</li>
+<li>Vision long terme</li>
+<li>Diversification efficace</li>
+</ul>
+
+<a href="Investir-efficacement.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 10 -->
+<div id="sol10" class="dashboard-section">
+<h1>💡 Idées de produits digitaux rentables</h1>
+<p>Identifie des niches rentables et des produits simples à créer.</p>
+
+<ul>
+<li>Ebooks à forte valeur</li>
+<li>Templates et outils pratiques</li>
+<li>Mini-formations ciblées</li>
+</ul>
+
+<a href="Niches-rentables-liées-aux-business.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 11 -->
+<div id="sol11" class="dashboard-section">
+<h1>🏦 Construire ton indépendance financière</h1>
+<p>Pose les fondations d’une liberté financière durable.</p>
+
+<ul>
+<li>Multiplication des sources de revenus</li>
+<li>Systèmes digitaux pérennes</li>
+<li>Discipline et vision stratégique</li>
+</ul>
+
+<a href="Construire-une-indépendance-financière-durable-en-ligne.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 12 -->
+<div id="sol12" class="dashboard-section">
+<h1>💰 L’Usine à Revenus Passifs</h1>
+<p>Crée des systèmes automatisés capables de vendre 24/7.</p>
+
+<ul>
+<li>Produits digitaux scalables</li>
+<li>Funnels automatisés performants</li>
+<li>Optimisation et scaling</li>
+</ul>
+
+<a href="L’usine-à-revenus-passifs-vivre-de-tes-produits-digitaux.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 13 -->
+<div id="sol13" class="dashboard-section">
+<h1>💡 Trouver une idée de business rentable</h1>
+<p>Découvre une méthode rapide pour identifier une idée rentable en moins de 30 minutes.</p>
+
+<ul>
+<li>Recherche intelligente</li>
+<li>Validation rapide</li>
+<li>Potentiel réel</li>
+</ul>
+
+<a href="Trouver-une-idée-de-business-rentable.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 14 -->
+<div id="sol14" class="dashboard-section">
+<h1>✅ Valider une idée sans perdre d’argent</h1>
+<p>Teste ton idée avant d’investir du temps ou de l’argent inutilement.</p>
+
+<ul>
+<li>Validation rapide</li>
+<li>Éviter les erreurs</li>
+<li>Analyse stratégique</li>
+</ul>
+
+<a href="Valider-une-idée-sans-perdre-d’argent.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 15 -->
+<div id="sol15" class="dashboard-section">
+<h1>📊 Analyser un marché comme un expert</h1>
+<p>Comprends les tendances et les opportunités d’un marché rentable.</p>
+
+<ul>
+<li>Analyse concurrentielle</li>
+<li>Demande réelle</li>
+<li>Positionnement stratégique</li>
+</ul>
+
+<a href="Analyser-un-marché-comme-un-expert.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 16 -->
+<div id="sol16" class="dashboard-section">
+<h1>🎯 Identifier une niche ultra rentable</h1>
+<p>Repère des niches rentables avec faible concurrence et forte demande.</p>
+
+<ul>
+<li>Niches cachées</li>
+<li>Potentiel élevé</li>
+<li>Audience ciblée</li>
+</ul>
+
+<a href="Identifier-une-niche-rentable.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 17 -->
+<div id="sol17" class="dashboard-section">
+<h1>🔥 Créer une offre irrésistible</h1>
+<p>Construis une offre que tes clients auront du mal à refuser.</p>
+
+<ul>
+<li>Valeur perçue forte</li>
+<li>Positionnement intelligent</li>
+<li>Argumentaire puissant</li>
+</ul>
+
+<a href="Créer-une-offre-irrésistible.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 18 -->
+<div id="sol18" class="dashboard-section">
+<h1>⚔️ Se différencier dans un marché saturé</h1>
+<p>Apprends à sortir du lot même dans une niche ultra concurrentielle.</p>
+
+<ul>
+<li>Différenciation forte</li>
+<li>Branding stratégique</li>
+<li>Position unique</li>
+</ul>
+
+<a href="Se-différencier-dans-un-marché-saturé.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 19 -->
+<div id="sol19" class="dashboard-section">
+<h1>👑 Positionner sa marque comme premium</h1>
+<p>Construis une image haut de gamme qui inspire confiance et autorité.</p>
+
+<ul>
+<li>Branding premium</li>
+<li>Valeur perçue</li>
+<li>Image professionnelle</li>
+</ul>
+
+<a href="Positionner-sa-marque-premium.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 20 -->
+<div id="sol20" class="dashboard-section">
+<h1>🌐 Construire un business digital rentable</h1>
+<p>Crée un business en ligne solide depuis zéro étape par étape.</p>
+
+<ul>
+<li>Structure rentable</li>
+<li>Vision long terme</li>
+<li>Système évolutif</li>
+</ul>
+
+<a href="Construire-un-business-digital-rentable.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 21 -->
+<div id="sol21" class="dashboard-section">
+<h1>📈 Scaler un business sans publicité</h1>
+<p>Développe ton business grâce au contenu, au trafic organique et aux systèmes.</p>
+
+<ul>
+<li>Scaling organique</li>
+<li>Audience engagée</li>
+<li>Croissance durable</li>
+</ul>
+
+<a href="Scaler-un-business-sans-publicité.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 22 -->
+<div id="sol22" class="dashboard-section">
+<h1>💸 Passer de 0 à 10k€/mois</h1>
+<p>Découvre les stratégies utilisées pour atteindre des revenus importants en ligne.</p>
+
+<ul>
+<li>Offres rentables</li>
+<li>Acquisition clients</li>
+<li>Scaling intelligent</li>
+</ul>
+
+<a href="Passer-de-0-à-10k-par-mois.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 23 -->
+<div id="sol23" class="dashboard-section">
+<h1>📝 Écrire une page de vente qui convertit</h1>
+<p>Structure une page capable de transformer des visiteurs en acheteurs.</p>
+
+<ul>
+<li>Copywriting efficace</li>
+<li>Psychologie de vente</li>
+<li>CTA puissants</li>
+</ul>
+
+<a href="Page-de-vente-qui-convertit.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 24 -->
+<div id="sol24" class="dashboard-section">
+<h1>🛒 Transformer un visiteur en client</h1>
+<p>Comprends les mécanismes qui poussent un prospect à acheter.</p>
+
+<ul>
+<li>Confiance</li>
+<li>Valeur perçue</li>
+<li>Conversion intelligente</li>
+</ul>
+
+<a href="Transformer-un-visiteur-en-client.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 25 -->
+<div id="sol25" class="dashboard-section">
+<h1>📊 Augmenter son taux de conversion</h1>
+<p>Optimise chaque détail pour vendre davantage avec le même trafic.</p>
+
+<ul>
+<li>Optimisation stratégique</li>
+<li>Analyse comportementale</li>
+<li>Tests efficaces</li>
+</ul>
+
+<a href="Augmenter-son-taux-de-conversion.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 26 -->
+<div id="sol26" class="dashboard-section">
+<h1>💎 Créer une offre à forte valeur perçue</h1>
+<p>Apprends à construire une offre irrésistible que les clients veulent acheter immédiatement.</p>
+
+<ul>
+<li>Positionnement premium</li>
+<li>Transformation claire</li>
+<li>Valeur perçue élevée</li>
+</ul>
+
+<a href="Créer-une-offre-à-forte-valeur-perçue.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 27 -->
+<div id="sol27" class="dashboard-section">
+<h1>🚀 Faire ses premières ventes sans audience</h1>
+<p>Découvre comment générer tes premières ventes même en partant de zéro.</p>
+
+<ul>
+<li>Stratégies organiques</li>
+<li>Prospection intelligente</li>
+<li>Premiers clients rapidement</li>
+</ul>
+
+<a href="Faire-ses-premières-ventes-même-avec-0-audience.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 28 -->
+<div id="sol28" class="dashboard-section">
+<h1>💬 Closer une vente en DM efficacement</h1>
+<p>Transforme tes conversations privées en ventes naturelles et fluides.</p>
+
+<ul>
+<li>Conversation persuasive</li>
+<li>Création de confiance</li>
+<li>Closing sans pression</li>
+</ul>
+
+<a href="Closer-une-vente-en-dm-efficacement.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 29 -->
+<div id="sol29" class="dashboard-section">
+<h1>🛡️ Gérer les objections clients</h1>
+<p>Réponds efficacement aux doutes et blocages avant la vente.</p>
+
+<ul>
+<li>Réponses stratégiques</li>
+<li>Gestion des hésitations</li>
+<li>Confiance et crédibilité</li>
+</ul>
+
+<a href="Gérer-les-objections-clients.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 30 -->
+<div id="sol30" class="dashboard-section">
+<h1>🧠 Déclencher une décision d’achat</h1>
+<p>Influence naturellement les décisions sans paraître agressif.</p>
+
+<ul>
+<li>Psychologie persuasive</li>
+<li>Communication subtile</li>
+<li>Déclencheurs émotionnels</li>
+</ul>
+
+<a href="Déclencher-une-décision-d’achat-sans-paraître-agressif.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 31 -->
+<div id="sol31" class="dashboard-section">
+<h1>⭐ Utiliser la preuve sociale pour vendre</h1>
+<p>Utilise l’influence sociale pour renforcer la confiance et augmenter tes ventes.</p>
+
+<ul>
+<li>Témoignages puissants</li>
+<li>Autorité sociale</li>
+<li>Crédibilité immédiate</li>
+</ul>
+
+<a href="Utiliser-la-preuve-sociale-pour-vendre.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 32 -->
+<div id="sol32" class="dashboard-section">
+<h1>📈 Augmenter la valeur moyenne d’un client</h1>
+<p>Maximise les revenus générés par chaque client.</p>
+
+<ul>
+<li>Upsell intelligent</li>
+<li>Cross-sell stratégique</li>
+<li>Optimisation du panier moyen</li>
+</ul>
+
+<a href="Augmenter-la-valeur-moyenne-d’un-client.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 33 -->
+<div id="sol33" class="dashboard-section">
+<h1>🔄 Créer un funnel automatique</h1>
+<p>Construis un tunnel simple capable de vendre automatiquement.</p>
+
+<ul>
+<li>Pages optimisées</li>
+<li>Automatisation efficace</li>
+<li>Conversion continue</li>
+</ul>
+
+<a href="Créer-un-funnel-simple-qui-vend-automatiquement.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 34 -->
+<div id="sol34" class="dashboard-section">
+<h1>⚙️ Automatiser ses ventes avec Systeme.io</h1>
+<p>Mets en place un système de vente automatisé avec Systeme.io.</p>
+
+<ul>
+<li>Funnels automatisés</li>
+<li>Email marketing</li>
+<li>Gestion simplifiée</li>
+</ul>
+
+<a href="Automatiser-ses-ventes-avec-systeme-io.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 35 -->
+<div id="sol35" class="dashboard-section">
+<h1>🧲 Créer une machine à leads</h1>
+<p>Attire automatiquement des prospects qualifiés chaque jour.</p>
+
+<ul>
+<li>Capture de leads</li>
+<li>Trafic ciblé</li>
+<li>Automatisation intelligente</li>
+</ul>
+
+<a href="Créer-une-machine-à-leads-automatique.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 36 -->
+<div id="sol36" class="dashboard-section">
+<h1>💸 Transformer du trafic en revenus passifs</h1>
+<p>Monétise efficacement ton audience et ton trafic.</p>
+
+<ul>
+<li>Monétisation scalable</li>
+<li>Funnels rentables</li>
+<li>Revenus automatiques</li>
+</ul>
+
+<a href="Transformer-du-trafic-en-revenus-passifs.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 37 -->
+<div id="sol37" class="dashboard-section">
+<h1>🏗️ Structurer un tunnel de vente complet</h1>
+<p>Crée un tunnel de vente optimisé de A à Z.</p>
+
+<ul>
+<li>Acquisition client</li>
+<li>Conversion stratégique</li>
+<li>Parcours optimisé</li>
+</ul>
+
+<a href="Structurer-un-tunnel-de-vente-complet.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 38 -->
+<div id="sol38" class="dashboard-section">
+<h1>📊 Optimiser chaque étape d’un funnel</h1>
+<p>Améliore les performances de ton tunnel de vente.</p>
+
+<ul>
+<li>Analyse des conversions</li>
+<li>Optimisation stratégique</li>
+<li>Meilleurs résultats</li>
+</ul>
+
+<a href="Optimiser-chaque-étape-d’un-funnel.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 39 -->
+<div id="sol39" class="dashboard-section">
+<h1>📧 Créer une séquence email qui vend</h1>
+<p>Automatise des emails capables de convertir tes prospects.</p>
+
+<ul>
+<li>Emails persuasifs</li>
+<li>Automatisation efficace</li>
+<li>Conversion continue</li>
+</ul>
+
+<a href="Créer-une-séquence-email-qui-vend.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+<!-- SOLUTION 40 -->
+<div id="sol40" class="dashboard-section">
+<h1>🎯 Faire du retargeting efficace</h1>
+<p>Reconnecte avec tes visiteurs pour augmenter tes conversions.</p>
+
+<ul>
+<li>Publics ciblés</li>
+<li>Relance intelligente</li>
+<li>Maximisation des ventes</li>
+</ul>
+
+<a href="Faire-du-retargeting-efficace.pdf" download>
+<button>⬇️ Télécharger la solution</button>
+</a>
+
+<br><br>
+<button onclick="showSection('library')">⬅ Retour</button>
+</div>
+
+</div>
+
+<div id="account" class="dashboard-section">
+  <h2>Mon compte</h2>
+
+  <ul>
+    <li>Nom : <span id="acc-name">—</span></li>
+    <li>Email : <span id="acc-email">—</span></li>
+    <li>
+      Mot de passe :
+      <input type="password" id="acc-password" readonly>
+    </li>
+    <li>Sécurité du compte : Activée</li>
+  </ul>
+
+  <button onclick="editAccount()">Modifier</button>
+</div>
+
+<div id="plans" class="dashboard-section">
+<h2>Plans & facturations</h2>
+<p>
+Plans : <br>
+🔵 Accès complet à NEEDLY<br>
+• À partir de 79 €<br>
+• Paiement unique<br>
+• Accès illimité à toutes les solutions<br>
+• Méthodes immédiatement actionnables<br>
+• Résultats concrets et mesurables<br>
+• Conçu pour une progression étape par étape</p>
+</div>
+
+<div id="terms" class="dashboard-section">
+<h2>Termes & conditions</h2>
+<p>L’accès et l’utilisation de NEEDLY impliquent l’acceptation de nos Conditions Générales de Vente et de notre Politique de 
+Confidentialité. Chaque utilisateur s’engage à utiliser les solutions de manière responsable et conforme aux lois et réglementations 
+locales. Le partage d’accès, d’identifiants ou de compte est strictement interdit et entraînera la suppression définitive du compte sans 
+possibilité de remboursement.</p>
+</div>
+</div>
+</div>
+  
+<footer>
+<p>©️ <span id="year"></span> NEEDLY — Micro-solutions exclusives. Aucun équivalent ailleurs.</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script>
+document.querySelectorAll(".faq-question").forEach(item => {
+    item.addEventListener("click", () => {
+
+        const parent = item.parentElement;
+
+        document.querySelectorAll(".faq-item").forEach(el => {
+            if (el !== parent) {
+                el.classList.remove("active");
+            }
+        });
+
+        parent.classList.toggle("active");
+    });
+});
+</script>
+
+<script>
+// =======================================
+// 🟢 JS complet pour boutons et dashboard
+// =======================================
+
+// ==========================
+// ✅ Fonctions boutons et dashboard
+// ==========================
+
+// Ouvrir / fermer modals
+function openAuth(id){ document.getElementById(id).classList.add('active'); }
+function closeAuth(id){ document.getElementById(id).classList.remove('active'); }
+
+function showDashboard(){
+
+  if (sessionStorage.getItem("needly_logged") !== "true") {
+    return;
+  }
+
+  document.getElementById('dashboard').style.display='flex';
+
+  document.getElementById('heroSection').style.display='none';
+  document.getElementById('marketplaceSection').style.display='none';
+  document.getElementById('avisSection').style.display='none';
+  document.getElementById('faqSection').style.display='none';
+}
+
+// Déconnexion
+function logout() {
+    // Demande de confirmation
+    if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+        // Effacer les données locales
+        localStorage.clear();
+
+        // Masquer les sections avant la redirection
+        let dashboard = document.getElementById('dashboard');
+        let hero = document.getElementById('heroSection');
+        let marketplace = document.getElementById('marketplaceSection');
+
+        if (dashboard) dashboard.style.display = 'none';
+        if (hero) hero.style.display = '';
+        if (marketplace) marketplace.style.display = '';
+
+        // Rediriger vers la page d'accueil
+        window.location.href = "./index.html"; // <-- assurez-vous que ce fichier existe
+    }
+}
+
+
+// Sections dashboard
+function showSection(id){
+document.querySelectorAll('.dashboard-section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+// ===============================
+// AFFICHAGE DU COMPTE
+// ===============================
+function updateAccountInfo() {
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  document.getElementById("acc-name").textContent =
+    user.name || "—";
+
+  document.getElementById("acc-email").textContent =
+    user.email || "—";
+}
+
+// ===============================
+// INITIALISATION DU COMPTE
+// ===============================
+function initializeAccount(user, nameFromSignup) {
+
+  const userData = {
+
+    name: nameFromSignup || user.displayName || "Utilisateur NEEDLY",
+
+    email: user.email || "",
+
+    password: "••••••••"
+
+  };
+
+  // Sauvegarde locale
+  localStorage.setItem("user", JSON.stringify(userData));
+
+  // Mise à jour interface
+  document.getElementById("acc-name").textContent =
+    userData.name;
+
+  document.getElementById("acc-email").textContent =
+    userData.email;
+
+  document.getElementById("acc-password").value =
+    userData.password;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  updateAccountInfo();
+
+  const access = localStorage.getItem("needlyAccess");
+
+  document.getElementById('btnExplore')?.addEventListener('click', () => {
+    document.getElementById('marketplaceSection')
+      .scrollIntoView({ behavior: 'smooth' });
+  });
+
+document.getElementById('linkLogin')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  openAuth('loginBox');
+});
+
+document.getElementById('linkSignup')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  openAuth('signupBox');
+});
+
+document.getElementById('linkSell')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  openAuth('signupBox');
+});
+
+
+
+document.getElementById('btnExplore')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('marketplaceSection')
+    .scrollIntoView({ behavior: 'smooth' });
+});
+
+
+document.getElementById('btnSell')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  openAuth('signupBox');
+});
+
+}); // ✅ fermeture du DOMContentLoaded
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  updateEmail,
+  updatePassword
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyClPbaLSJ1uQlWdEYc4UCLmhbWAJKsgIcA",
+    authDomain: "needly-108c9.firebaseapp.com",
+    projectId: "needly-108c9",
+    storageBucket: "needly-108c9.firebasestorage.app",
+    messagingSenderId: "918902744060",
+    appId: "1:918902744060:web:ed1bc871e59f384bb58879"
+  };
+
+// =========================
+
+// INIT
+
+// =========================
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// =========================
+
+// AUTH STATE
+
+// =========================
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  const userRef = doc(db, "users", user.uid);
+
+  onSnapshot(userRef, (docSnap) => {
+    if (!docSnap.exists()) return;
+
+    const data = docSnap.data();
+
+    // juste stocker l’état, PAS ouvrir le dashboard
+    window.userPaid = data.paid === true;
+    window.userData = data;
+  });
+});
+
+  // =========================
+  // INSCRIPTION
+  // =========================
+window.createAccount = function () {
+
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value.trim();
+
+  if (!email || !password) {
+    alert("Email et mot de passe obligatoires");
+    return;
+  }
+      
+      const name = document.getElementById("signupName").value.trim();
+
+      localStorage.setItem("signupName", name); 
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+
+  const user = userCredential.user;
+
+    // 🔥 FIX IMPORTANT : passer le nom directement
+
+    initializeAccount(user, name);
+
+    await setDoc(doc(db, "users", user.uid), {
+
+      email: user.email,
+
+      name: name,
+
+      paid: false
+
+    });
+
+      alert("Compte créé avec succès ! Connecte-toi pour accéder au dashboard.");
+
+      closeAuth("signupBox");
+    })
+    .catch((err) => {
+
+      if (err.code === "auth/invalid-email") {
+        alert("Email invalide");
+      }
+      else if (err.code === "auth/email-already-in-use") {
+        alert("Cet email est déjà utilisé");
+      }
+      else if (err.code === "auth/weak-password") {
+        alert("Mot de passe trop faible");
+      }
+      else {
+        alert("Erreur : " + err.message);
+      }
+
+    });
+};
+
+  // =========================
+  // CONNEXION
+  // =========================
+window.login = function () {
+
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+
+      const user = userCredential.user;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+
+        const data = docSnap.data();
+
+        if (data.paid === true) {
+   sessionStorage.setItem("needly_logged", "true");
+   closeAuth("loginBox");
+   initializeAccount(user, data.name);
+   showDashboard();
+ } else {
+  alert("Paiement non activé. Accès refusé.");
+ }
+
+}
+
+    })
+    .catch((err) => {
+
+      if (err.code === "auth/invalid-email") {
+        alert("Email invalide");
+      }
+      else if (err.code === "auth/wrong-password") {
+        alert("Mot de passe incorrect");
+      }
+      else if (err.code === "auth/user-not-found") {
+        alert("Aucun compte trouvé");
+      }
+      else {
+        alert("Erreur : " + err.message);
+      }
+
+    });
+};
+
+async function checkAccess(user) {
+
+  const docSnap = await getDoc(doc(db, "users", user.uid));
+
+  if (docSnap.exists() && docSnap.data().paid === true) {
+    showDashboard();
+  } else {
+    alert("Accès non activé");
+  }
+}
+
+window.editAccount = async function () {
+
+  if (!auth.currentUser) return;
+
+  const user = auth.currentUser;
+
+  // Données actuelles
+  const localUser =
+    JSON.parse(localStorage.getItem("user")) || {};
+
+  // =========================
+  // DEMANDES UTILISATEUR
+  // =========================
+
+  let newName = prompt(
+    "Nom :",
+    localUser.name || ""
+  );
+
+  if (newName === null) return;
+
+  let newEmail = prompt(
+    "Email :",
+    user.email
+  );
+
+  if (newEmail === null) return;
+
+  let newPassword = prompt(
+    "Mot de passe :",
+    ""
+  );
+
+  if (newPassword === null) return;
+
+  try {
+
+    // =========================
+    // FIREBASE
+    // =========================
+
+    // Modifier email
+    if (newEmail !== user.email) {
+      await updateEmail(user, newEmail);
+    }
+
+    // Modifier mot de passe
+    if (newPassword.trim() !== "") {
+      await updatePassword(user, newPassword);
+    }
+
+    // =========================
+    // LOCAL STORAGE
+    // =========================
+
+    const updatedUser = {
+      name: newName,
+      email: newEmail,
+      password: "••••••••"
+    };
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(updatedUser)
+    );
+
+    // =========================
+    // MAJ INTERFACE
+    // =========================
+
+    document.getElementById("acc-name").textContent =
+      newName;
+
+    document.getElementById("acc-email").textContent =
+      newEmail;
+
+    document.getElementById("acc-password").value =
+      "••••••••";
+
+    // =========================
+    // SUCCÈS
+    // =========================
+
+    alert("Votre compte a été modifié avec succès !");
+
+  } catch (error) {
+
+    alert("Erreur : " + error.message);
+
+  }
+
+};
+
+</script>
+
+</body>
+</html>
